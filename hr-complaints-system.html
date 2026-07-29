@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR Complaints System — Daniel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#231942; --bg-2:#2f1f57; --paper:#FFF6E9; --sun:#FFC857; --coral:#FF6B6B; --mint:#4ECDC4;
+    --ink:#1A1425; --ink-soft:#2f2740; --cream-text:#F4F1FA;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:radial-gradient(circle at 15% 10%, var(--bg-2), transparent 40%),
+               radial-gradient(circle at 85% 90%, var(--bg-2), transparent 45%), var(--bg);
+    color:var(--cream-text); font-family:'Inter', sans-serif;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--coral); color:var(--ink);}
+
+  .wrap{max-width:800px; margin:0 auto; padding:36px 24px 90px;}
+  header{display:flex; justify-content:space-between; align-items:center; margin-bottom:50px;}
+  .logo{font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:1.2rem;}
+  .logo span{color:var(--sun);}
+  .back{
+    font-family:'JetBrains Mono', monospace; font-size:0.85rem; text-decoration:none;
+    color:#B7AFD1; border-bottom:1px solid transparent;
+  }
+  .back:hover{color:var(--coral); border-color:var(--coral);}
+
+  .status-tag{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:var(--coral);
+    background:rgba(255,107,107,0.12); padding:6px 14px; border-radius:20px; margin-bottom:22px;
+  }
+  .dot{width:8px; height:8px; border-radius:50%; background:var(--coral);}
+
+  h1{
+    font-family:'Space Grotesk', sans-serif; font-weight:700;
+    font-size:clamp(2rem, 5vw, 3rem); line-height:1.1; letter-spacing:-0.02em; margin:0 0 20px;
+  }
+  .lead{font-size:1.08rem; line-height:1.7; color:#D9D3EC; max-width:600px; margin-bottom:36px;}
+
+  .meta-row{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:50px;}
+  .tag{
+    font-family:'JetBrains Mono', monospace; font-size:0.78rem;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(244,241,250,0.15);
+    padding:6px 14px; border-radius:20px;
+  }
+
+  section{margin-bottom:46px;}
+  .section-title{
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:1.35rem; margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .section-title::before{content:""; width:22px; height:3px; background:var(--mint); border-radius:3px;}
+  p{font-size:0.98rem; line-height:1.75; color:#D9D3EC; max-width:640px;}
+
+  ul.feature-list{list-style:none; margin:0; padding:0; max-width:640px;}
+  ul.feature-list li{
+    padding:14px 0 14px 28px; border-bottom:1px solid rgba(244,241,250,0.08);
+    position:relative; font-size:0.96rem; line-height:1.6; color:#D9D3EC;
+  }
+  ul.feature-list li::before{content:"→"; position:absolute; left:0; color:var(--coral);}
+  ul.feature-list li:last-child{border-bottom:none;}
+
+  .cta{
+    background:var(--paper); color:var(--ink); border-radius:12px; padding:30px 28px; margin-top:20px;
+  }
+  .cta h3{font-family:'Space Grotesk', sans-serif; margin:0 0 10px;}
+  .cta p{color:var(--ink-soft); margin-bottom:18px;}
+  .btn{
+    font-family:'JetBrains Mono', monospace; font-size:0.85rem;
+    background:var(--ink); color:var(--paper); padding:11px 20px; border-radius:8px;
+    text-decoration:none; display:inline-block;
+  }
+
+  footer{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;
+    font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:#B7AFD1;
+    border-top:1px solid rgba(244,241,250,0.12); padding-top:26px; margin-top:20px;
+  }
+  footer a{text-decoration:none; color:var(--sun);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">daniel<span>.</span>dev</div>
+    <a href="index.html" class="back">← Balik ke portfolio</a>
+  </header>
+
+  <span class="status-tag"><span class="dot"></span> ARCHIVED — FOUNDATION PROJECT</span>
+  <h1>HR Complaints System</h1>
+  <p class="lead">Sistem pengurusan aduan yang menjadi asas (foundation) sebelum berkembang jadi Sistem Bantuan Teknikal yang lebih lengkap.</p>
+
+  <div class="meta-row">
+    <span class="tag">Laravel</span>
+    <span class="tag">SQLite</span>
+    <span class="tag">jQuery + Select2</span>
+  </div>
+
+  <section>
+    <div class="section-title">Overview</div>
+    <p>Projek ni bermula sebagai sistem pengurusan aduan (complaint management) yang mudah — establishing core data model dan logic asas sebelum sistem berkembang jadi lebih kompleks dengan Change Request flow, role-switching, dan lain-lain fungsi lanjutan.</p>
+  </section>
+
+  <section>
+    <div class="section-title">Data model asas</div>
+    <p>Struktur data teras yang dibina: <b>Complaint</b>, <b>User</b>, <b>ComplaintPicStatus</b>, dan jadual pivot <b>complaint_assignees</b> untuk sokong multi-assignee — di mana satu aduan boleh ditugaskan kepada lebih dari satu PIC.</p>
+  </section>
+
+  <section>
+    <div class="section-title">Key features</div>
+    <ul class="feature-list">
+      <li>Struktur tiga peranan asas: Staff, PIC, Admin</li>
+      <li>Fungsi multi-assignee untuk aduan yang perlu lebih dari satu orang tangani</li>
+      <li>Status flow: pending → in progress → resolved / not resolved</li>
+      <li>Integrasi Select2 untuk pemilihan staff/PIC yang lebih mesra pengguna</li>
+      <li>Man-hour tracking per PIC untuk setiap aduan</li>
+      <li>Penyelesaian isu foreign key constraint dalam SQLite semasa fasa awal</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="section-title">Evolusi projek</div>
+    <p>Sistem ni kemudiannya diperluas secara besar-besaran — ditambah jadual <code>change_requests</code> berasingan, flow approval CR penuh, role tambahan (SV, KB TM), dan dashboard analytics — akhirnya menjadi Sistem Bantuan Teknikal yang digunakan PKPP hari ini.</p>
+  </section>
+
+  <div class="cta">
+    <h3>Nak tahu lebih lanjut?</h3>
+    <p>Projek ni dah "graduate" jadi Sistem Bantuan Teknikal — boleh tengok versi penuh dia, atau hubungi saya untuk cerita journey pembinaan.</p>
+    <a href="sistem-bantuan-teknikal.html" class="btn">Tengok Sistem Bantuan Teknikal →</a>
+  </div>
+
+  <footer>
+    <span>&copy; 2026 Daniel</span>
+    <a href="index.html">← Balik ke portfolio</a>
+  </footer>
+</div>
+</body>
+</html>
