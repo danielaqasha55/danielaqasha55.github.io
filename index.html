@@ -341,7 +341,7 @@
   const btn = document.getElementById('greetBtn');
   if(!btn) return;
 
-  const GREETING = "YOWWWWW BROOOOOO, welcome to my portfolio!!!!! bro usha usha dulu website ni. pape lu contact gua through email or github";
+  const GREETING = "anjayyyy, welcome to my portfolio!!!!! bro usha usha dulu website ni. pape lu contact gua through email or github";
 
   function pickFemaleVoice(){
     const voices = window.speechSynthesis.getVoices();
@@ -350,7 +350,7 @@
       v => /ms-MY|id-ID/i.test(v.lang) && /female/i.test(v.name),
       v => /ms-MY|id-ID/i.test(v.lang),
       v => /female/i.test(v.name) && /en-/i.test(v.lang),
-      v => /Samantha|Google UK English Female|Zira|Microsoft Zira/i.test(v.name),
+      v => /Samantha|Google MY Malaysia Female|Zira|Microsoft Zira/i.test(v.name),
       v => /en-/i.test(v.lang)
     ];
     for(const test of prefOrder){
