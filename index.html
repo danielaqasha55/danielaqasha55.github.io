@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daniel — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#231942;
+    --bg-2:#2f1f57;
+    --paper:#FFF6E9;
+    --sun:#FFC857;
+    --coral:#FF6B6B;
+    --mint:#4ECDC4;
+    --ink:#1A1425;
+    --ink-soft:#2f2740;
+    --cream-text:#F4F1FA;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 15% 10%, var(--bg-2), transparent 40%),
+      radial-gradient(circle at 85% 90%, var(--bg-2), transparent 45%),
+      var(--bg);
+    color:var(--cream-text);
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--coral); color:var(--ink);}
+
+  /* subtle grain/dot texture */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image: radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 18px 18px;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  header{
+    max-width:1100px; margin:0 auto; padding:32px 24px 0;
+    display:flex; justify-content:space-between; align-items:center;
+    position:relative; z-index:2;
+  }
+  .logo{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700; font-size:1.3rem;
+    letter-spacing:-0.02em;
+  }
+  .logo span{color:var(--sun);}
+  nav a{
+    text-decoration:none; font-size:0.9rem; margin-left:22px;
+    font-family:'JetBrains Mono', monospace;
+    color:var(--cream-text); opacity:0.75;
+    transition:opacity .2s;
+  }
+  nav a:hover{opacity:1; color:var(--sun);}
+
+  .status{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'JetBrains Mono', monospace; font-size:0.75rem;
+    color:var(--mint); letter-spacing:0.04em;
+  }
+  .dot{
+    width:8px; height:8px; border-radius:50%; background:var(--mint);
+    box-shadow:0 0 0 0 rgba(78,205,196,0.6);
+    animation: pulse 1.8s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(78,205,196,0.55);}
+    70%{box-shadow:0 0 0 10px rgba(78,205,196,0);}
+    100%{box-shadow:0 0 0 0 rgba(78,205,196,0);}
+  }
+
+  .hero{
+    max-width:1100px; margin:0 auto; padding:90px 24px 60px;
+    position:relative; z-index:2;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    color:var(--sun); font-size:0.85rem; letter-spacing:0.08em;
+    text-transform:uppercase; margin-bottom:18px; display:block;
+  }
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(2.6rem, 7vw, 4.6rem);
+    line-height:1.03; letter-spacing:-0.02em; margin:0 0 22px;
+  }
+  h1 .hl{color:var(--coral);}
+  .hero p{
+    max-width:560px; font-size:1.08rem; line-height:1.6;
+    color:#D9D3EC; margin-bottom:34px;
+  }
+  .btn-row{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    font-family:'JetBrains Mono', monospace; font-size:0.9rem;
+    padding:13px 22px; border-radius:10px; text-decoration:none;
+    display:inline-block; font-weight:500;
+    transition:transform .15s ease, box-shadow .15s ease;
+    border:2px solid transparent;
+  }
+  .btn-primary{background:var(--sun); color:var(--ink);}
+  .btn-primary:hover{transform:translate(-2px,-2px); box-shadow:4px 4px 0 var(--coral);}
+  .btn-ghost{border-color:rgba(244,241,250,0.35); color:var(--cream-text);}
+  .btn-ghost:hover{transform:translate(-2px,-2px); box-shadow:4px 4px 0 var(--mint); border-color:var(--mint);}
+
+  section{max-width:1100px; margin:0 auto; padding:70px 24px; position:relative; z-index:2;}
+  .section-title{
+    font-family:'Space Grotesk', sans-serif; font-weight:700;
+    font-size:1.8rem; margin-bottom:8px; letter-spacing:-0.01em;
+  }
+  .section-sub{
+    font-family:'JetBrains Mono', monospace; font-size:0.8rem;
+    color:var(--mint); margin-bottom:36px; display:block;
+  }
+
+  /* corkboard */
+  .board{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+    gap:28px;
+  }
+  .card{
+    background:var(--paper); color:var(--ink);
+    border-radius:6px; padding:26px 24px 24px;
+    position:relative;
+    box-shadow:0 10px 24px rgba(0,0,0,0.28);
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .card:nth-child(1){transform:rotate(-1.4deg);}
+  .card:nth-child(2){transform:rotate(1deg);}
+  .card:nth-child(3){transform:rotate(-0.6deg);}
+  .card:hover{transform:rotate(0deg) translateY(-4px); box-shadow:0 16px 30px rgba(0,0,0,0.35);}
+  .tape{
+    position:absolute; top:-14px; left:50%; transform:translateX(-50%) rotate(-3deg);
+    width:90px; height:26px; background:rgba(255,200,87,0.85);
+    box-shadow:0 2px 6px rgba(0,0,0,0.2);
+  }
+  .card h3{
+    font-family:'Space Grotesk', sans-serif; font-size:1.15rem; margin:6px 0 10px;
+  }
+  .card p{font-size:0.92rem; line-height:1.55; color:var(--ink-soft); margin-bottom:14px;}
+  .tags{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;}
+  .tag{
+    font-family:'JetBrains Mono', monospace; font-size:0.7rem;
+    background:rgba(26,20,37,0.08); padding:4px 9px; border-radius:5px;
+  }
+  .card a.link{
+    font-family:'JetBrains Mono', monospace; font-size:0.82rem;
+    color:var(--ink); font-weight:500; text-decoration:none;
+    border-bottom:2px solid var(--coral);
+  }
+
+  /* skills */
+  .skills-wrap{display:flex; flex-wrap:wrap; gap:12px;}
+  .skill-pill{
+    font-family:'JetBrains Mono', monospace; font-size:0.85rem;
+    padding:9px 16px; border-radius:999px;
+    border:1.5px solid rgba(244,241,250,0.28);
+    background:rgba(255,255,255,0.03);
+  }
+  .skill-pill.sun{border-color:var(--sun); color:var(--sun);}
+  .skill-pill.mint{border-color:var(--mint); color:var(--mint);}
+  .skill-pill.coral{border-color:var(--coral); color:var(--coral);}
+
+  footer{
+    max-width:1100px; margin:0 auto; padding:50px 24px 70px;
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:16px;
+    font-family:'JetBrains Mono', monospace; font-size:0.82rem;
+    color:#B7AFD1; position:relative; z-index:2;
+    border-top:1px solid rgba(244,241,250,0.12);
+  }
+  footer a{text-decoration:none; color:var(--sun);}
+
+  @media(max-width:640px){
+    nav{display:none;}
+    .card:nth-child(1),.card:nth-child(2),.card:nth-child(3){transform:none;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .dot{animation:none;}
+    .card{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">daniel<span>.</span>dev</div>
+  <nav>
+    <a href="#projek">Projek</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <span class="eyebrow">Diploma Computer Science · UiTM Perlis</span>
+  <h1>Saya bina sistem yang<br>selesaikan masalah <span class="hl">sebenar.</span></h1>
+  <p>Developer yang tengah practical training di PKPP, sibuk bina sistem helpdesk IT dari kosong — dari database schema sampai UI yang orang benar-benar guna setiap hari.</p>
+  <div class="btn-row">
+    <a href="#projek" class="btn btn-primary">Tengok projek →</a>
+    <a href="#contact" class="btn btn-ghost">Contact saya</a>
+  </div>
+</section>
+
+<section id="projek">
+  <span class="section-title">Projek</span>
+  <span class="section-sub">// dari corkboard developer</span>
+
+  <div class="board">
+    <div class="card">
+      <div class="tape"></div>
+      <span class="status"><span class="dot"></span> ONLINE — PRODUCTION</span>
+      <h3>Sistem Bantuan Teknikal</h3>
+      <p>Helpdesk IT internal untuk PKPP — dari zero. Ada role-switching (Staff/PIC/Admin/SV/KB TM), flow approval Change Request penuh, dashboard dengan chart, dan report PDF bulanan.</p>
+      <div class="tags">
+        <span class="tag">Laravel</span>
+        <span class="tag">MySQL</span>
+        <span class="tag">Bootstrap 5</span>
+        <span class="tag">Chart.js</span>
+      </div>
+      <a href="#" class="link">Baca lebih lanjut →</a>
+    </div>
+
+    <div class="card">
+      <div class="tape"></div>
+      <span class="status" style="color:var(--coral)"><span class="dot" style="background:var(--coral); box-shadow:none;"></span> ARCHIVED</span>
+      <h3>HR Complaints System</h3>
+      <p>Sistem pengurusan aduan awal — foundation untuk projek Sistem Bantuan Teknikal. Ada multi-assignee, status flow, dan man-hour tracking per PIC.</p>
+      <div class="tags">
+        <span class="tag">Laravel</span>
+        <span class="tag">SQLite</span>
+        <span class="tag">Select2</span>
+      </div>
+      <a href="#" class="link">Baca lebih lanjut →</a>
+    </div>
+
+    <div class="card">
+      <div class="tape"></div>
+      <span class="status" style="color:var(--sun)"><span class="dot" style="background:var(--sun); box-shadow:none;"></span> EXPLORING</span>
+      <h3>AI Triage Agent</h3>
+      <p>Eksperimen integrate AI agent untuk auto-triage & assign tiket support, guna Anthropic API dalam Laravel Queue Job dengan structured JSON output.</p>
+      <div class="tags">
+        <span class="tag">Laravel Queue</span>
+        <span class="tag">Anthropic API</span>
+      </div>
+      <a href="#" class="link">Baca lebih lanjut →</a>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <span class="section-title">Skills</span>
+  <span class="section-sub">// tools dalam toolbox</span>
+  <div class="skills-wrap">
+    <span class="skill-pill sun">PHP</span>
+    <span class="skill-pill sun">Laravel</span>
+    <span class="skill-pill mint">MySQL</span>
+    <span class="skill-pill mint">SQLite</span>
+    <span class="skill-pill coral">Bootstrap 5</span>
+    <span class="skill-pill coral">jQuery</span>
+    <span class="skill-pill sun">Select2</span>
+    <span class="skill-pill mint">Chart.js</span>
+    <span class="skill-pill coral">Git</span>
+  </div>
+</section>
+
+<section id="contact">
+  <span class="section-title">Contact</span>
+  <span class="section-sub">// jom sembang</span>
+  <p style="max-width:520px; color:#D9D3EC; line-height:1.6; margin-bottom:24px;">
+    Nak tanya pasal projek, kolaborasi, atau sekadar nak sembang teknikal — reach out je.
+  </p>
+  <div class="btn-row">
+    <a href="mailto:youremail@example.com" class="btn btn-primary">Email saya</a>
+    <a href="https://github.com/yourusername" class="btn btn-ghost">GitHub</a>
+    <a href="https://linkedin.com/in/yourusername" class="btn btn-ghost">LinkedIn</a>
+  </div>
+</section>
+
+<footer>
+  <span>&copy; 2026 Daniel — Built with HTML, CSS &amp; a lot of kopi.</span>
+  <a href="#top">↑ Balik atas</a>
+</footer>
+
+</body>
+</html>
