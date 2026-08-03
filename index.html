@@ -347,8 +347,8 @@
     const voices = window.speechSynthesis.getVoices();
     // Prefer a Malay/Indonesian voice if available, else any female-labelled English voice
     const prefOrder = [
-      v => /ms-MY/i.test(v.lang) && /female/i.test(v.name),
-      v => /ms-MY/i.test(v.lang),
+      v => /ms-MY|id-ID/i.test(v.lang) && /female/i.test(v.name),
+      v => /ms-MY|id-ID/i.test(v.lang),
       v => /female/i.test(v.name) && /en-/i.test(v.lang),
       v => /Samantha|Google MY Malaysia Female|Zira|Microsoft Zira/i.test(v.name),
       v => /en-/i.test(v.lang)
