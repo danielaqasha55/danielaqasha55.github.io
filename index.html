@@ -65,7 +65,7 @@
   header{
     max-width:1100px; margin:0 auto; padding:32px 24px 0;
     display:flex; justify-content:space-between; align-items:center;
-    position:relative; z-index:2;
+    position:relative; z-index:20;
   }
   .logo{
     font-family:'Space Grotesk', sans-serif;
@@ -86,6 +86,19 @@
   }
   nav a:hover{opacity:1; color:var(--sun);}
   nav a:hover::after{width:100%;}
+
+  /* hamburger button — hidden on desktop */
+  .hamburger{
+    display:none; flex-direction:column; gap:5px;
+    background:none; border:none; cursor:pointer; padding:8px; z-index:21;
+  }
+  .hamburger span{
+    width:24px; height:2px; background:var(--cream-text); border-radius:2px;
+    transition:transform .25s ease, opacity .25s ease;
+  }
+  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .hamburger.open span:nth-child(2){opacity:0;}
+  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
   .status{
     display:inline-flex; align-items:center; gap:6px;
@@ -220,9 +233,23 @@
   footer a{text-decoration:none; color:var(--sun);}
 
   @media(max-width:640px){
-    nav{display:none;}
+    .hamburger{display:flex;}
+    nav{
+      position:fixed; top:0; right:0; height:100vh; width:min(72vw, 280px);
+      background:#1E1638; padding:90px 28px 28px;
+      display:flex; flex-direction:column; gap:20px;
+      transform:translateX(100%); transition:transform .3s ease;
+      box-shadow:-8px 0 30px rgba(0,0,0,0.4); z-index:19;
+    }
+    nav.open{transform:translateX(0);}
+    nav a{margin-left:0; font-size:1.05rem;}
     .card:nth-child(1),.card:nth-child(2),.card:nth-child(3){transform:none;}
   }
+
+  .nav-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:18;
+  }
+  .nav-backdrop.open{display:block;}
 
   @media (prefers-reduced-motion: reduce){
     .dot{animation:none;}
@@ -239,7 +266,11 @@
 
 <header>
   <div class="logo">daniel<span>.</span>dev</div>
-  <nav>
+  <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-backdrop" id="navBackdrop"></div>
+  <nav id="mainNav">
     <a href="#projek">Projek</a>
     <a href="#skills">Skills</a>
     <a href="games.html">Playground</a>
@@ -342,7 +373,7 @@
   const btn = document.getElementById('greetBtn');
   if(!btn) return;
 
-  const GREETING = "anjayyyy, welcome to my portfolio!!!!! bro usha usha dulu website ni. pape lu contact gua through email or github. Hahayy. Lagu ni kalu boleh toksey tengok hok masa lalu, doh guano hiduk gelak even aku bukok lapu.aku toksey toksey toksey, mitok jangey pakso aku aduh koksey koksey koksey mari balik koto baru Lagu ni kalu boleh toksey tengok hok masa lalu, doh guano hiduk gelak even aku bukok lapu. aku toksey toksey toksey, mitok jangey pakso aku aduh koksey koksey koksey mari balik koto baru aku toksey doh, maso lalu punoh ranoh mato layu buleh pekdoh ingak baik buak saloh tanoh air, air mato mato air jadi gilo cinto buto mu tok napok.                                                                      Ohoiii oi, lamo tok turun ke basa, raso nok segar angin, samekom, Sekok sebok miye risa, Samekomm, buleh hajak doh maley ni. ihii, cak kapok ular lidi, tedung senduk nago boro, woknik gelenya sengoti, tok insah lagi tuo";
+  const GREETING = "Anjayy, jom la usha-usha website den ni! Nok tanyo apo-apo pasal projek, contact je den kat email atau GitHub tu. Lamo tak jumpo pun takpo, hajak la sokmo!";
 
   function pickFemaleVoice(){
     const voices = window.speechSynthesis.getVoices();
@@ -411,6 +442,32 @@
     });
   }, {threshold:0.15, rootMargin:'0px 0px -40px 0px'});
   items.forEach(el => io.observe(el));
+})();
+// mobile hamburger menu
+(function(){
+  const btn = document.getElementById('hamburgerBtn');
+  const nav = document.getElementById('mainNav');
+  const backdrop = document.getElementById('navBackdrop');
+  if(!btn || !nav || !backdrop) return;
+
+  function closeMenu(){
+    nav.classList.remove('open');
+    backdrop.classList.remove('open');
+    btn.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+  function openMenu(){
+    nav.classList.add('open');
+    backdrop.classList.add('open');
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+  btn.addEventListener('click', () => {
+    nav.classList.contains('open') ? closeMenu() : openMenu();
+  });
+  backdrop.addEventListener('click', closeMenu);
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  window.addEventListener('resize', () => { if(window.innerWidth > 640) closeMenu(); });
 })();
 </script>
 </body>
