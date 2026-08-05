@@ -154,6 +154,13 @@
 
   const colors = { snakeHead:'#FFC857', snakeBody:'#4ECDC4', food:'#FF6B6B', grid:'rgba(244,241,250,0.04)' };
 
+  // Custom head image — upload a file named exactly "snake-head.png" in the same folder as this page
+  const headImg = new Image();
+  let headImgLoaded = false;
+  headImg.onload = () => { headImgLoaded = true; };
+  headImg.onerror = () => { headImgLoaded = false; }; // falls back to colored square if missing
+  headImg.src = 'snake-head.png';
+
   let snake, dir, nextDir, food, score, best, running, loopId;
   let bestScore = 0;
 
@@ -227,8 +234,27 @@
     roundRect(food.x*cellSize+3, food.y*cellSize+3, cellSize-6, cellSize-6, 6);
     // snake
     snake.forEach((s,i)=>{
-      ctx.fillStyle = i === 0 ? colors.snakeHead : colors.snakeBody;
-      roundRect(s.x*cellSize+2, s.y*cellSize+2, cellSize-4, cellSize-4, 5);
+      if(i === 0 && headImgLoaded){
+        // draw head image, rotated to face current direction
+        const cx = s.x*cellSize + cellSize/2;
+        const cy = s.y*cellSize + cellSize/2;
+        let angle = 0;
+        if(dir.x === 1) angle = 0;
+        else if(dir.x === -1) angle = Math.PI;
+        else if(dir.y === -1) angle = -Math.PI/2;
+        else if(dir.y === 1) angle = Math.PI/2;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(angle);
+        ctx.drawImage(headImg, -cellSize/2, -cellSize/2, cellSize, cellSize);
+        ctx.restore();
+      } else if(i === 0){
+        ctx.fillStyle = colors.snakeHead;
+        roundRect(s.x*cellSize+2, s.y*cellSize+2, cellSize-4, cellSize-4, 5);
+      } else {
+        ctx.fillStyle = colors.snakeBody;
+        roundRect(s.x*cellSize+2, s.y*cellSize+2, cellSize-4, cellSize-4, 5);
+      }
     });
   }
 
