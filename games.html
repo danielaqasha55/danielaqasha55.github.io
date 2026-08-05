@@ -46,6 +46,27 @@
     background:#2A1D4E; border-radius:16px; border:1px solid rgba(244,241,250,0.08);
     padding:24px; box-shadow:0 20px 50px rgba(0,0,0,0.35);
   }
+
+  /* avatar picker */
+  .avatar-picker{margin-bottom:22px;}
+  .avatar-grid{
+    display:grid; grid-template-columns:repeat(6, 1fr); gap:10px; max-width:420px;
+  }
+  .avatar-thumb{
+    aspect-ratio:1/1; border-radius:10px; border:2px solid rgba(244,241,250,0.15);
+    background:#2A1D4E; cursor:pointer; overflow:hidden; padding:0;
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .avatar-thumb:hover{transform:translateY(-2px); border-color:var(--mint);}
+  .avatar-thumb.selected{border-color:var(--sun); box-shadow:0 0 0 2px rgba(255,200,87,0.3);}
+  .avatar-thumb img{width:100%; height:100%; object-fit:cover; display:block;}
+  .avatar-thumb.hidden{display:none;}
+  .default-head{width:60%; height:60%; border-radius:5px; background:var(--sun); display:block;}
+
+  @media(max-width:480px){
+    .avatar-grid{grid-template-columns:repeat(4, 1fr); max-width:100%;}
+  }
   .hud{
     display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;
     font-family:'JetBrains Mono', monospace; font-size:0.88rem;
@@ -112,6 +133,21 @@
   <h1>Rehat sekejap, main <span class="hl">Snake.</span></h1>
   <p class="lead">Bila dah penat scroll portfolio, boleh main game ni jap. Guna arrow key (atau d-pad kat mobile) untuk kawal.</p>
 
+  <div class="avatar-picker">
+    <span class="field-label" style="margin-bottom:10px;">Pilih avatar untuk kepala ular</span>
+    <div class="avatar-grid" id="avatarGrid">
+      <button class="avatar-thumb selected" data-src="avatar-default.png" data-fallback="true" title="Default">
+        <span class="default-head"></span>
+      </button>
+      <button class="avatar-thumb" data-src="avatar1.png"><img src="avatar1.png" alt="Avatar 1"></button>
+      <button class="avatar-thumb" data-src="avatar2.png"><img src="avatar2.png" alt="Avatar 2"></button>
+      <button class="avatar-thumb" data-src="avatar3.png"><img src="avatar3.png" alt="Avatar 3"></button>
+      <button class="avatar-thumb" data-src="avatar4.png"><img src="avatar4.png" alt="Avatar 4"></button>
+      <button class="avatar-thumb" data-src="avatar5.png"><img src="avatar5.png" alt="Avatar 5"></button>
+      <button class="avatar-thumb" data-src="avatar6.png"><img src="avatar6.png" alt="Avatar 6"></button>
+    </div>
+  </div>
+
   <div class="game-panel">
     <div class="hud">
       <span class="score">Skor: <span id="score">0</span></span>
@@ -154,12 +190,33 @@
 
   const colors = { snakeHead:'#FFC857', snakeBody:'#4ECDC4', food:'#FF6B6B', grid:'rgba(244,241,250,0.04)' };
 
-  // Custom head image — upload a file named exactly "snake-head.png" in the same folder as this page
+  // Avatar system — click a thumbnail to change the snake head image
   const headImg = new Image();
   let headImgLoaded = false;
   headImg.onload = () => { headImgLoaded = true; };
-  headImg.onerror = () => { headImgLoaded = false; }; // falls back to colored square if missing
-  headImg.src = 'snake-head.png';
+  headImg.onerror = () => { headImgLoaded = false; };
+
+  function setAvatar(src, thumbEl){
+    document.querySelectorAll('.avatar-thumb').forEach(t => t.classList.remove('selected'));
+    if(thumbEl) thumbEl.classList.add('selected');
+    if(src){
+      headImgLoaded = false;
+      headImg.src = src;
+    } else {
+      headImgLoaded = false; // default coloured square head
+    }
+  }
+
+  document.querySelectorAll('.avatar-thumb').forEach(thumb => {
+    const isDefault = thumb.dataset.fallback === 'true';
+    const img = thumb.querySelector('img');
+    if(img){
+      img.addEventListener('error', () => { thumb.classList.add('hidden'); });
+    }
+    thumb.addEventListener('click', () => {
+      setAvatar(isDefault ? null : thumb.dataset.src, thumb);
+    });
+  });
 
   let snake, dir, nextDir, food, score, best, running, loopId;
   let bestScore = 0;
