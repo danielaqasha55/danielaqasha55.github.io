@@ -91,23 +91,20 @@
   }
   .btn:hover{transform:translateY(-2px);}
 
-  /* mobile d-pad */
-  .dpad{display:none; margin-top:20px; justify-content:center;}
-  .dpad-grid{
-    display:grid; grid-template-columns:repeat(3, 54px); grid-template-rows:repeat(3, 54px); gap:6px;
-  }
-  .dpad button{
-    background:rgba(244,241,250,0.08); border:1px solid rgba(244,241,250,0.15);
-    color:var(--cream-text); border-radius:8px; font-size:1.1rem; cursor:pointer;
-  }
-  .dpad-up{grid-column:2; grid-row:1;}
-  .dpad-left{grid-column:1; grid-row:2;}
-  .dpad-right{grid-column:3; grid-row:2;}
-  .dpad-down{grid-column:2; grid-row:3;}
-
   .overlay-msg{
     text-align:center; font-family:'JetBrains Mono', monospace; font-size:0.9rem;
     color:var(--coral); margin-top:14px; min-height:20px;
+  }
+
+  /* swipe direction flash (visual feedback on mobile) */
+  .swipe-flash{
+    position:fixed; pointer-events:none; z-index:9990;
+    font-size:2.5rem; opacity:0; animation:swipeFade .4s ease forwards;
+  }
+  @keyframes swipeFade{
+    0%{opacity:0; transform:scale(0.6);}
+    30%{opacity:0.85; transform:scale(1.1);}
+    100%{opacity:0; transform:scale(1);}
   }
 
   footer{
@@ -116,10 +113,6 @@
     border-top:1px solid rgba(244,241,250,0.1); padding-top:26px; margin-top:50px;
   }
   footer a{text-decoration:none; color:var(--sun);}
-
-  @media(max-width:560px){
-    .dpad{display:flex;}
-  }
 </style>
 </head>
 <body>
@@ -134,7 +127,7 @@
   <p class="lead">Bila dah penat scroll portfolio, boleh main game ni jap. Guna arrow key (atau d-pad kat mobile) untuk kawal.</p>
 
   <div class="avatar-picker">
-    <span class="field-label" style="margin-bottom:10px;">Pilih avatar untuk Kepala Butoh</span>
+    <span class="field-label" style="margin-bottom:10px;">Pilih avatar untuk kepala ular</span>
     <div class="avatar-grid" id="avatarGrid">
       <button class="avatar-thumb selected" data-src="avatar-default.png" data-fallback="true" title="Default">
         <span class="default-head"></span>
@@ -155,19 +148,10 @@
     </div>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
     <div class="controls-row">
-      <span class="hint">↑ ↓ ← → untuk gerak</span>
+      <span class="hint" id="controlHint">↑ ↓ ← → untuk gerak</span>
       <button class="btn" id="restartBtn">Restart</button>
     </div>
     <div class="overlay-msg" id="overlayMsg"></div>
-
-    <div class="dpad">
-      <div class="dpad-grid">
-        <button class="dpad-up" data-dir="up">↑</button>
-        <button class="dpad-left" data-dir="left">←</button>
-        <button class="dpad-right" data-dir="right">→</button>
-        <button class="dpad-down" data-dir="down">↓</button>
-      </div>
-    </div>
   </div>
 
   <div style="margin-top:26px; font-family:'JetBrains Mono', monospace; font-size:0.85rem; color:var(--dim); text-align:center;">
@@ -345,12 +329,46 @@
     }
   });
 
-  document.querySelectorAll('.dpad button').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const map = { up:{x:0,y:-1}, down:{x:0,y:1}, left:{x:-1,y:0}, right:{x:1,y:0} };
-      setDir(map[btn.dataset.dir]);
-    });
-  });
+  // swipe controls (mobile) — swipe anywhere on the canvas
+  let touchStartX = 0, touchStartY = 0;
+  const SWIPE_THRESHOLD = 24; // minimum px to register as a swipe
+
+  function flashArrow(symbol, x, y){
+    const el = document.createElement('div');
+    el.className = 'swipe-flash';
+    el.textContent = symbol;
+    el.style.left = (x - 20) + 'px';
+    el.style.top = (y - 30) + 'px';
+    document.body.appendChild(el);
+    setTimeout(()=> el.remove(), 400);
+  }
+
+  canvas.addEventListener('touchstart', (e)=>{
+    const t = e.touches[0];
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+  }, {passive:true});
+
+  canvas.addEventListener('touchend', (e)=>{
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
+    if(Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) return; // tap, not swipe
+
+    if(Math.abs(dx) > Math.abs(dy)){
+      if(dx > 0){ setDir({x:1,y:0}); flashArrow('→', t.clientX, t.clientY); }
+      else { setDir({x:-1,y:0}); flashArrow('←', t.clientX, t.clientY); }
+    } else {
+      if(dy > 0){ setDir({x:0,y:1}); flashArrow('↓', t.clientX, t.clientY); }
+      else { setDir({x:0,y:-1}); flashArrow('↑', t.clientX, t.clientY); }
+    }
+  }, {passive:true});
+
+  // update hint text on touch devices
+  if(window.matchMedia('(pointer: coarse)').matches){
+    const hintEl = document.getElementById('controlHint');
+    if(hintEl) hintEl.textContent = 'Swipe atas papan untuk gerak';
+  }
 
   restartBtn.addEventListener('click', ()=>{
     reset();
