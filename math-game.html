@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Rush — Playground — Daniel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#231942; --bg-2:#2f1f57; --paper:#FFF6E9; --sun:#FFC857; --coral:#FF6B6B; --mint:#4ECDC4;
+    --ink:#1A1425; --cream-text:#F4F1FA; --dim:#B7AFD1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(circle at 15% 10%, var(--bg-2), transparent 40%),
+               radial-gradient(circle at 85% 90%, var(--bg-2), transparent 45%), var(--bg);
+    color:var(--cream-text); font-family:'Inter', sans-serif;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--coral); color:var(--ink);}
+
+  .wrap{max-width:600px; margin:0 auto; padding:36px 22px 80px;}
+  header{display:flex; justify-content:space-between; align-items:center; margin-bottom:36px;}
+  .logo{font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:1.2rem;}
+  .logo span{color:var(--sun);}
+  .back{
+    font-family:'JetBrains Mono', monospace; font-size:0.85rem; text-decoration:none;
+    color:var(--dim); border-bottom:1px solid transparent;
+  }
+  .back:hover{color:var(--sun); border-color:var(--sun);}
+
+  .field-label{
+    font-family:'JetBrains Mono', monospace; font-size:0.78rem; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--mint); display:block; margin-bottom:14px;
+  }
+  h1{
+    font-family:'Space Grotesk', sans-serif; font-weight:700;
+    font-size:clamp(1.9rem, 5vw, 2.6rem); margin:0 0 12px; letter-spacing:-0.02em;
+  }
+  h1 .hl{color:var(--coral);}
+  .lead{color:#D9D3EC; line-height:1.6; max-width:480px; margin-bottom:28px;}
+
+  .game-panel{
+    background:#2A1D4E; border-radius:16px; border:1px solid rgba(244,241,250,0.08);
+    padding:28px 24px; box-shadow:0 20px 50px rgba(0,0,0,0.35);
+  }
+
+  .hud{
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;
+    font-family:'JetBrains Mono', monospace; font-size:0.88rem;
+  }
+  .hud .score{color:var(--sun);}
+  .hud .timer{color:var(--mint);}
+  .hud .streak{color:var(--coral);}
+
+  .timer-track{
+    width:100%; height:6px; background:rgba(244,241,250,0.1); border-radius:4px;
+    overflow:hidden; margin-bottom:28px;
+  }
+  .timer-bar{height:100%; width:100%; background:linear-gradient(90deg, var(--mint), var(--sun)); border-radius:4px; transition:width 1s linear;}
+
+  .question-box{
+    text-align:center; padding:20px 0 30px;
+  }
+  #questionText{
+    font-family:'Space Grotesk', sans-serif; font-weight:700;
+    font-size:clamp(2rem, 8vw, 2.8rem); letter-spacing:-0.01em;
+  }
+
+  .options-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:14px;
+  }
+  .opt-btn{
+    font-family:'JetBrains Mono', monospace; font-size:1.15rem; font-weight:500;
+    padding:20px 10px; border-radius:12px; cursor:pointer;
+    background:rgba(244,241,250,0.06); border:1.5px solid rgba(244,241,250,0.15);
+    color:var(--cream-text); transition:transform .12s ease, background .15s ease, border-color .15s ease;
+  }
+  .opt-btn:hover{transform:translateY(-2px); border-color:var(--mint);}
+  .opt-btn.correct{background:rgba(78,205,196,0.25); border-color:var(--mint);}
+  .opt-btn.wrong{background:rgba(255,107,107,0.25); border-color:var(--coral);}
+  .opt-btn:disabled{cursor:default; transform:none;}
+
+  .start-screen, .end-screen{text-align:center; padding:30px 10px;}
+  .start-screen p, .end-screen p{color:#D9D3EC; line-height:1.6; margin-bottom:24px;}
+  .big-btn{
+    font-family:'JetBrains Mono', monospace; font-size:0.95rem;
+    padding:14px 28px; border-radius:10px; border:none; cursor:pointer;
+    background:var(--sun); color:var(--ink); font-weight:600;
+    transition:transform .15s ease;
+  }
+  .big-btn:hover{transform:translateY(-2px);}
+
+  .end-score{
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:2.6rem;
+    color:var(--sun); margin-bottom:6px;
+  }
+
+  .hidden{display:none;}
+
+  .other-games{
+    margin-top:26px; font-family:'JetBrains Mono', monospace; font-size:0.85rem;
+    color:var(--dim); text-align:center;
+  }
+  .other-games a{color:var(--mint); text-decoration:none; border-bottom:1px solid var(--mint);}
+
+  footer{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;
+    font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:var(--dim);
+    border-top:1px solid rgba(244,241,250,0.1); padding-top:26px; margin-top:50px;
+  }
+  footer a{text-decoration:none; color:var(--sun);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">daniel<span>.</span>dev</div>
+    <a href="index.html" class="back">← Balik ke portfolio</a>
+  </header>
+
+  <span class="field-label">Playground</span>
+  <h1>Math <span class="hl">Rush.</span></h1>
+  <p class="lead">Jawab soalan matematik secepat mungkin sebelum masa habis. Tahap sederhana — campur, tolak, darab & bahagi.</p>
+
+  <div class="game-panel">
+    <!-- START SCREEN -->
+    <div class="start-screen" id="startScreen">
+      <p>60 saat. Setiap jawapan betul dapat 10 mata + bonus streak. Ready?</p>
+      <button class="big-btn" id="startBtn">Mula Main</button>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div class="hidden" id="gameScreen">
+      <div class="hud">
+        <span class="score">Skor: <span id="score">0</span></span>
+        <span class="streak">🔥 <span id="streak">0</span></span>
+        <span class="timer"><span id="timeLeft">60</span>s</span>
+      </div>
+      <div class="timer-track"><div class="timer-bar" id="timerBar"></div></div>
+      <div class="question-box">
+        <div id="questionText">?</div>
+      </div>
+      <div class="options-grid" id="optionsGrid"></div>
+    </div>
+
+    <!-- END SCREEN -->
+    <div class="hidden end-screen" id="endScreen">
+      <div class="end-score" id="finalScore">0</div>
+      <p>Skor terbaik: <span id="bestScoreText">0</span></p>
+      <button class="big-btn" id="playAgainBtn">Main Lagi</button>
+    </div>
+  </div>
+
+  <div class="other-games">Nak main game lain? <a href="games.html">Snake →</a></div>
+
+  <footer>
+    <span>&copy; 2026 Daniel</span>
+    <a href="index.html">← Balik ke portfolio</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const startScreen = document.getElementById('startScreen');
+  const gameScreen = document.getElementById('gameScreen');
+  const endScreen = document.getElementById('endScreen');
+  const startBtn = document.getElementById('startBtn');
+  const playAgainBtn = document.getElementById('playAgainBtn');
+  const scoreEl = document.getElementById('score');
+  const streakEl = document.getElementById('streak');
+  const timeLeftEl = document.getElementById('timeLeft');
+  const timerBar = document.getElementById('timerBar');
+  const questionText = document.getElementById('questionText');
+  const optionsGrid = document.getElementById('optionsGrid');
+  const finalScore = document.getElementById('finalScore');
+  const bestScoreText = document.getElementById('bestScoreText');
+
+  const DURATION = 60;
+  let score = 0, streak = 0, timeLeft = DURATION, bestScore = 0, timerId = null, answering = false;
+
+  function genQuestion(){
+    const ops = ['+','-','×','÷'];
+    const op = ops[Math.floor(Math.random()*ops.length)];
+    let a, b, answer, text;
+
+    if(op === '+'){
+      a = rand(12, 89); b = rand(12, 89);
+      answer = a + b; text = `${a} + ${b}`;
+    } else if(op === '-'){
+      a = rand(20, 99); b = rand(5, a);
+      answer = a - b; text = `${a} − ${b}`;
+    } else if(op === '×'){
+      a = rand(2, 12); b = rand(2, 12);
+      answer = a * b; text = `${a} × ${b}`;
+    } else {
+      b = rand(2, 12); answer = rand(2, 12); a = b * answer;
+      text = `${a} ÷ ${b}`;
+    }
+    return { text, answer };
+  }
+
+  function rand(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+  function genOptions(correct){
+    const opts = new Set([correct]);
+    while(opts.size < 4){
+      const delta = rand(-10, 10) || 1;
+      const candidate = correct + delta;
+      if(candidate >= 0) opts.add(candidate);
+    }
+    return shuffle([...opts]);
+  }
+
+  function shuffle(arr){
+    for(let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  let currentQ;
+  function nextQuestion(){
+    answering = false;
+    currentQ = genQuestion();
+    questionText.textContent = currentQ.text + ' = ?';
+    const opts = genOptions(currentQ.answer);
+    optionsGrid.innerHTML = '';
+    opts.forEach(val => {
+      const btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.textContent = val;
+      btn.addEventListener('click', () => handleAnswer(val, btn));
+      optionsGrid.appendChild(btn);
+    });
+  }
+
+  function handleAnswer(val, btn){
+    if(answering) return;
+    answering = true;
+    const buttons = optionsGrid.querySelectorAll('.opt-btn');
+    buttons.forEach(b => b.disabled = true);
+
+    if(val === currentQ.answer){
+      btn.classList.add('correct');
+      streak++;
+      const bonus = Math.min(streak, 5) * 2;
+      score += 10 + bonus;
+    } else {
+      btn.classList.add('wrong');
+      streak = 0;
+      buttons.forEach(b => { if(parseInt(b.textContent) === currentQ.answer) b.classList.add('correct'); });
+    }
+    scoreEl.textContent = score;
+    streakEl.textContent = streak;
+
+    setTimeout(() => {
+      if(timeLeft > 0) nextQuestion();
+    }, 450);
+  }
+
+  function startGame(){
+    score = 0; streak = 0; timeLeft = DURATION;
+    scoreEl.textContent = 0; streakEl.textContent = 0; timeLeftEl.textContent = DURATION;
+    timerBar.style.width = '100%';
+    startScreen.classList.add('hidden');
+    endScreen.classList.add('hidden');
+    gameScreen.classList.remove('hidden');
+    nextQuestion();
+    timerId = setInterval(tickTimer, 1000);
+  }
+
+  function tickTimer(){
+    timeLeft--;
+    timeLeftEl.textContent = timeLeft;
+    timerBar.style.width = (timeLeft / DURATION * 100) + '%';
+    if(timeLeft <= 0){
+      clearInterval(timerId);
+      endGame();
+    }
+  }
+
+  function endGame(){
+    if(score > bestScore) bestScore = score;
+    gameScreen.classList.add('hidden');
+    endScreen.classList.remove('hidden');
+    finalScore.textContent = score;
+    bestScoreText.textContent = bestScore;
+  }
+
+  startBtn.addEventListener('click', startGame);
+  playAgainBtn.addEventListener('click', startGame);
+})();
+</script>
+</body>
+</html>
