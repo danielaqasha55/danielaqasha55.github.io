@@ -62,6 +62,218 @@
     z-index:0;
   }
 
+  /* ===== chill add-ons ===== */
+
+  /* custom cursor */
+  @media (pointer: fine){
+    body.custom-cursor-on{cursor:none;}
+    body.custom-cursor-on a, body.custom-cursor-on button{cursor:none;}
+  }
+  #cursorDot{
+    position:fixed; width:10px; height:10px; border-radius:50%;
+    background:var(--sun); pointer-events:none; z-index:9999;
+    transform:translate(-50%,-50%); display:none;
+    box-shadow:0 0 12px 2px rgba(255,200,87,0.6);
+  }
+  #particleCanvas{
+    position:fixed; inset:0; pointer-events:none; z-index:9998; display:none;
+  }
+
+  /* fun controls row */
+  #funControls{
+    position:fixed; bottom:18px; right:18px; z-index:40;
+    display:flex; flex-direction:column; gap:8px; align-items:flex-end;
+  }
+  .fun-btn{
+    width:42px; height:42px; border-radius:50%; border:1px solid rgba(244,241,250,0.2);
+    background:#2A1D4E; color:var(--cream-text); font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 20px rgba(0,0,0,0.35); transition:transform .15s ease;
+  }
+  .fun-btn:hover{transform:scale(1.08);}
+  .fun-btn.active{background:var(--sun); color:var(--ink); border-color:var(--sun);}
+
+  /* now playing widget */
+  #nowPlaying{
+    position:fixed; bottom:18px; left:18px; z-index:40;
+    background:#2A1D4E; border:1px solid rgba(244,241,250,0.12);
+    border-radius:30px; padding:8px 16px 8px 8px;
+    display:flex; align-items:center; gap:10px;
+    font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--dim, #B7AFD1);
+    box-shadow:0 8px 20px rgba(0,0,0,0.3);
+    max-width:min(70vw, 260px);
+  }
+  #nowPlaying .np-icon{
+    width:26px; height:26px; border-radius:50%; background:var(--mint);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    animation:npSpin 4s linear infinite;
+  }
+  @keyframes npSpin{ to{ transform:rotate(360deg); } }
+  #nowPlaying .np-text{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  #nowPlaying .np-text b{color:var(--cream-text);}
+
+  /* mood badge */
+  #moodBadge{
+    font-family:'JetBrains Mono', monospace; font-size:0.72rem;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(244,241,250,0.15);
+    padding:5px 12px; border-radius:20px; color:var(--mint);
+    display:inline-flex; align-items:center; gap:6px; margin-bottom:14px;
+  }
+
+  /* CRT mode */
+  body.crt-mode{ animation-play-state:paused; }
+  body.crt-mode::after{
+    content:""; position:fixed; inset:0; z-index:9990; pointer-events:none;
+    background:repeating-linear-gradient(
+      to bottom, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 3px
+    );
+    mix-blend-mode:multiply;
+  }
+  body.crt-mode #progress-bar{z-index:9991;}
+  @keyframes crtFlicker{
+    0%,100%{opacity:1;} 92%{opacity:1;} 93%{opacity:0.92;} 94%{opacity:1;}
+  }
+  body.crt-mode .wrap, body.crt-mode section, body.crt-mode header{
+    animation:crtFlicker 6s infinite;
+  }
+
+  /* confetti layer (easter egg) */
+  #confetti-layer{position:fixed; inset:0; pointer-events:none; z-index:9995; overflow:hidden;}
+  .confetti-piece{position:absolute; top:-10px; border-radius:2px; opacity:0.9;}
+
+  #secretMsg{
+    position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0.8);
+    background:#2A1D4E; border:1px solid var(--sun); border-radius:14px;
+    padding:26px 30px; z-index:9996; text-align:center; max-width:320px;
+    opacity:0; pointer-events:none; transition:opacity .3s ease, transform .3s ease;
+    box-shadow:0 20px 50px rgba(0,0,0,0.5);
+  }
+  #secretMsg.show{opacity:1; transform:translate(-50%,-50%) scale(1); pointer-events:auto;}
+  #secretMsg h4{font-family:'Space Grotesk', sans-serif; color:var(--sun); margin:0 0 8px;}
+  #secretMsg p{font-size:0.85rem; color:#D9D3EC; margin:0 0 14px; line-height:1.5;}
+  #secretMsg button{
+    font-family:'JetBrains Mono', monospace; font-size:0.8rem;
+    background:var(--sun); color:var(--ink); border:none; border-radius:8px;
+    padding:8px 16px; cursor:pointer;
+  }
+
+  @media(max-width:640px){
+    #funControls{bottom:14px; right:14px;}
+    #nowPlaying{
+      max-width:min(60vw, 200px); padding:6px 12px 6px 6px; font-size:0.68rem;
+      bottom:14px; left:14px;
+    }
+    #nowPlaying .np-icon{width:20px; height:20px; font-size:0.7rem;}
+  }
+
+  /* parallax floating blobs (tilt/mouse reactive) */
+  .parallax-blob{
+    position:fixed; border-radius:50%; pointer-events:none; z-index:1;
+    filter:blur(40px); opacity:0.35; transition:transform .15s ease-out;
+  }
+  .pb1{width:220px; height:220px; background:var(--sun); top:8%; left:5%;}
+  .pb2{width:180px; height:180px; background:var(--coral); top:55%; right:6%;}
+  .pb3{width:140px; height:140px; background:var(--mint); bottom:10%; left:15%;}
+
+  /* end-of-page celebration */
+  #celebrateToast{
+    position:fixed; bottom:90px; left:50%; transform:translate(-50%,20px);
+    background:#2A1D4E; border:1px solid var(--sun); border-radius:16px;
+    padding:14px 22px; font-family:'JetBrains Mono', monospace; font-size:0.85rem;
+    color:var(--cream-text); text-align:center; z-index:9994;
+    opacity:0; transition:opacity .4s ease, transform .4s ease; pointer-events:none;
+    box-shadow:0 12px 30px rgba(0,0,0,0.4);
+  }
+  #celebrateToast.show{opacity:1; transform:translate(-50%,0);}
+
+  /* roaming bug mascot */
+  #bugMascot{
+    position:fixed; font-size:28px; z-index:9993; cursor:pointer;
+    user-select:none; filter:drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+    transition:transform .15s ease;
+    animation:bugWiggle 0.6s ease-in-out infinite;
+  }
+  #bugMascot:hover{transform:scale(1.2);}
+  @keyframes bugWiggle{
+    0%,100%{transform:rotate(-8deg);} 50%{transform:rotate(8deg);}
+  }
+  #bugCounter{
+    position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
+    font-family:'JetBrains Mono', monospace; font-size:0.72rem; color:var(--dim, #B7AFD1);
+    background:#2A1D4E; border:1px solid rgba(244,241,250,0.12);
+    padding:5px 14px; border-radius:20px; z-index:39; display:none;
+  }
+  #bugCounter.show{display:block;}
+  .squash-pop{
+    position:fixed; pointer-events:none; z-index:9994;
+    font-family:'JetBrains Mono', monospace; font-size:0.85rem; color:var(--mint);
+    font-weight:600; opacity:0; animation:squashFloat .8s ease forwards;
+  }
+  @keyframes squashFloat{
+    0%{ opacity:0; transform:translateY(0) scale(0.8); }
+    20%{ opacity:1; transform:translateY(-6px) scale(1); }
+    100%{ opacity:0; transform:translateY(-40px) scale(1); }
+  }
+
+  /* hidden terminal */
+  #terminalOverlay{
+    position:fixed; inset:0; background:rgba(10,7,20,0.92); z-index:9998;
+    display:none; align-items:flex-start; justify-content:center;
+    padding:10vh 20px; backdrop-filter:blur(4px);
+  }
+  #terminalOverlay.show{display:flex;}
+  .terminal-box{
+    width:100%; max-width:560px; background:#150F26; border:1px solid rgba(255,200,87,0.3);
+    border-radius:10px; box-shadow:0 30px 70px rgba(0,0,0,0.6); overflow:hidden;
+  }
+  .terminal-titlebar{
+    display:flex; align-items:center; gap:8px; padding:10px 14px;
+    background:rgba(255,255,255,0.04); font-family:'JetBrains Mono', monospace;
+    font-size:0.75rem; color:var(--dim, #B7AFD1);
+  }
+  .terminal-titlebar .tdot{width:10px; height:10px; border-radius:50%;}
+  .terminal-body{
+    padding:16px 18px; font-family:'JetBrains Mono', monospace; font-size:0.85rem;
+    color:var(--mint); max-height:40vh; overflow-y:auto; line-height:1.7;
+  }
+  .terminal-body .t-line{white-space:pre-wrap; word-break:break-word;}
+  .terminal-body .t-cmd{color:var(--sun);}
+  .terminal-input-row{
+    display:flex; align-items:center; gap:8px; padding:12px 18px;
+    border-top:1px solid rgba(244,241,250,0.08); font-family:'JetBrains Mono', monospace;
+  }
+  .terminal-input-row span{color:var(--sun);}
+  #terminalInput{
+    flex:1; background:transparent; border:none; outline:none;
+    color:var(--cream-text); font-family:'JetBrains Mono', monospace; font-size:0.85rem;
+  }
+  .terminal-hint{
+    text-align:center; font-family:'JetBrains Mono', monospace; font-size:0.7rem;
+    color:var(--dim, #B7AFD1); margin-top:10px;
+  }
+
+  /* heart burst (double-tap) */
+  .heart-burst{
+    position:fixed; pointer-events:none; z-index:9997;
+    font-size:60px; transform:translate(-50%,-50%) scale(0.3);
+    opacity:0; animation:heartPop .7s ease forwards;
+  }
+  @keyframes heartPop{
+    0%{ transform:translate(-50%,-50%) scale(0.3); opacity:0; }
+    30%{ transform:translate(-50%,-50%) scale(1.15); opacity:1; }
+    100%{ transform:translate(-50%,-50%) scale(1) translateY(-40px); opacity:0; }
+  }
+
+  .logo{cursor:pointer; user-select:none;}
+  .shake-toast{
+    position:fixed; top:20px; left:50%; transform:translate(-50%,-20px);
+    background:#2A1D4E; border:1px solid var(--sun); border-radius:20px;
+    padding:10px 18px; font-family:'JetBrains Mono', monospace; font-size:0.8rem;
+    color:var(--sun); z-index:9997; opacity:0; transition:opacity .3s ease, transform .3s ease;
+    pointer-events:none; white-space:nowrap;
+  }
+  .shake-toast.show{opacity:1; transform:translate(-50%,0);}
+
   header{
     max-width:1100px; margin:0 auto; padding:32px 24px 0;
     display:flex; justify-content:space-between; align-items:center;
@@ -264,6 +476,12 @@
 <body>
 <div id="progress-bar"></div>
 
+<div class="parallax-blob pb1" data-depth="18"></div>
+<div class="parallax-blob pb2" data-depth="28"></div>
+<div class="parallax-blob pb3" data-depth="12"></div>
+
+<div id="celebrateToast">🎉 Terima kasih dah scroll sampai habis!</div>
+
 <header>
   <div class="logo">daniel<span>.</span>dev</div>
   <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu" aria-expanded="false">
@@ -279,7 +497,8 @@
 </header>
 
 <section class="hero">
-  <span class="eyebrow reveal">Diploma Computer Science · UiTM Jasin</span>
+  <span class="eyebrow reveal">Diploma Computer Science · UiTM Perlis</span>
+  <div><span id="moodBadge" class="reveal">🟢 Status: —</span></div>
   <h1 class="reveal">Develop System<br>yang gila <span class="hl">Babi.</span></h1>
   <p class="reveal">Developer ni tengah practical training dekat PKPP, tunggu masa je ni nak habis intern Baghua. sistem helpdesk IT dari kosong — dari database schema sampai UI yang orang betul betul guna setiap hari.</p>
   <div class="btn-row reveal">
@@ -364,16 +583,65 @@
 </section>
 
 <footer>
-  <span>&copy; 2026 Daniel — Built with HTML, CSS &amp; a lot of kopi.</span>
+  <span>&copy; 2026 Daniel — Built with HTML, CSS &amp; a lot of kopi. <span style="opacity:0.5;">(psst, cuba tekan "/")</span></span>
   <a href="#top">↑ Balik atas</a>
 </footer>
+
+<!-- chill add-ons markup -->
+<div id="cursorDot"></div>
+<canvas id="particleCanvas"></canvas>
+<div id="confetti-layer"></div>
+
+<div id="nowPlaying">
+  <span class="np-icon">🎧</span>
+  <span class="np-text">Currently vibing to: <b id="npSong">Lo-fi Coding Beats</b></span>
+</div>
+
+<div id="funControls">
+  <button class="fun-btn" id="musicToggle" title="Muzik background" type="button">🎵</button>
+  <button class="fun-btn" id="cursorToggle" title="Custom cursor" type="button">✨</button>
+  <button class="fun-btn" id="crtToggle" title="Retro CRT mode" type="button">📺</button>
+  <button class="fun-btn" id="shakeToggle" title="Goncang phone untuk shuffle mood" type="button">📳</button>
+</div>
+
+<div class="shake-toast" id="shakeToast"></div>
+
+<div id="secretMsg">
+  <h4>🎉 Eh, jumpa jugak!</h4>
+  <p>Korang dah jumpa easter egg tersembunyi ni. Anyway, terima kasih sebab explore portfolio den sampai sejauh ni!</p>
+  <button id="closeSecretBtn">Ok gempak</button>
+</div>
+
+<audio id="bgMusic" loop preload="none">
+  <source src="bg-music.mp3" type="audio/mpeg">
+</audio>
+
+<div id="bugCounter">🐛 Bugs fixed: <span id="bugCount">0</span></div>
+
+<div id="terminalOverlay">
+  <div class="terminal-box">
+    <div class="terminal-titlebar">
+      <span class="tdot" style="background:var(--coral)"></span>
+      <span class="tdot" style="background:var(--sun)"></span>
+      <span class="tdot" style="background:var(--mint)"></span>
+      <span style="margin-left:8px;">daniel@portfolio: ~</span>
+    </div>
+    <div class="terminal-body" id="terminalBody">
+      <div class="t-line">Selamat datang. Taip <span class="t-cmd">help</span> untuk senarai command.</div>
+    </div>
+    <div class="terminal-input-row">
+      <span>&gt;</span>
+      <input type="text" id="terminalInput" autocomplete="off" spellcheck="false" placeholder="taip command...">
+    </div>
+  </div>
+</div>
 
 <script>
 (function(){
   const btn = document.getElementById('greetBtn');
   if(!btn) return;
 
-  const GREETING = "anjayyyy, welcome to my portfolio!!!!! bro usha usha dulu website ni. pape lu contact gua through email or github. Hahayy. Lagu ni kalu boleh toksey tengok hok masa lalu, doh guano hiduk gelak even aku bukok lapu.aku toksey toksey toksey, mitok jangey pakso aku aduh koksey koksey koksey mari balik koto baru aku toksey doh, maso lalu punoh ranoh mato layu buleh pekdoh ingak baik buak saloh tanoh air, air mato mato air jadi gilo cinto buto mu tok napok.                                                                      Ohoiii oi, lamo tok turun ke basa, raso nok segar angin, samekom, Sekok sebok miye risa, Samekomm, buleh hajak doh maley ni";
+  const GREETING = "Anjayy, jom la usha-usha website den ni! Nok tanyo apo-apo pasal projek, contact je den kat email atau GitHub tu. Lamo tak jumpo pun takpo, hajak la sokmo!";
 
   function pickFemaleVoice(){
     const voices = window.speechSynthesis.getVoices();
@@ -468,6 +736,497 @@
   backdrop.addEventListener('click', closeMenu);
   nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
   window.addEventListener('resize', () => { if(window.innerWidth > 640) closeMenu(); });
+})();
+
+// ===== mood badge =====
+(function(){
+  const el = document.getElementById('moodBadge');
+  if(!el) return;
+  const moods = [
+    '🟢 Status: Tengah ngoding',
+    '🟡 Status: Debug mode ON',
+    '☕ Status: Perlukan kopi',
+    '🔵 Status: Rehat sekejap',
+    '🟠 Status: Fixing bug orang lain'
+  ];
+  el.textContent = moods[Math.floor(Math.random() * moods.length)];
+})();
+
+// ===== custom cursor + particle trail =====
+(function(){
+  const dot = document.getElementById('cursorDot');
+  const canvas = document.getElementById('particleCanvas');
+  const toggleBtn = document.getElementById('cursorToggle');
+  if(!dot || !canvas || !toggleBtn) return;
+  const ctx = canvas.getContext('2d');
+  let active = false;
+  let particles = [];
+  const palette = ['#FFC857', '#FF6B6B', '#4ECDC4'];
+
+  function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function onMove(e){
+    if(!active) return;
+    const x = e.clientX, y = e.clientY;
+    dot.style.left = x + 'px';
+    dot.style.top = y + 'px';
+    particles.push({ x, y, r: 3 + Math.random()*3, life: 1, color: palette[Math.floor(Math.random()*palette.length)] });
+  }
+  window.addEventListener('mousemove', onMove);
+
+  function loop(){
+    if(active){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p => {
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fill();
+        p.life -= 0.04;
+        p.y -= 0.4;
+      });
+      ctx.globalAlpha = 1;
+      particles = particles.filter(p => p.life > 0);
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  function setActive(state){
+    active = state;
+    toggleBtn.classList.toggle('active', state);
+    dot.style.display = state ? 'block' : 'none';
+    canvas.style.display = state ? 'block' : 'none';
+    document.body.classList.toggle('custom-cursor-on', state);
+    if(!state){ particles = []; ctx.clearRect(0,0,canvas.width,canvas.height); }
+  }
+  toggleBtn.addEventListener('click', () => setActive(!active));
+
+  // disable on touch-only devices
+  if(window.matchMedia('(pointer: coarse)').matches){
+    toggleBtn.style.display = 'none';
+  }
+})();
+
+// ===== background music toggle =====
+(function(){
+  const btn = document.getElementById('musicToggle');
+  const audio = document.getElementById('bgMusic');
+  if(!btn || !audio) return;
+  let playing = false;
+
+  audio.addEventListener('error', () => {
+    btn.style.opacity = '0.35';
+    btn.title = 'Fail muzik belum ada (bg-music.mp3)';
+  });
+
+  btn.addEventListener('click', () => {
+    if(!playing){
+      audio.volume = 0.35;
+      audio.play().then(() => {
+        playing = true;
+        btn.classList.add('active');
+      }).catch(() => {
+        btn.title = 'Fail muzik belum ada (bg-music.mp3)';
+      });
+    } else {
+      audio.pause();
+      playing = false;
+      btn.classList.remove('active');
+    }
+  });
+})();
+
+// ===== CRT mode toggle =====
+(function(){
+  const btn = document.getElementById('crtToggle');
+  if(!btn) return;
+  btn.addEventListener('click', () => {
+    document.body.classList.toggle('crt-mode');
+    btn.classList.toggle('active');
+  });
+})();
+
+// ===== konami code easter egg =====
+(function(){
+  const secretMsg = document.getElementById('secretMsg');
+  const closeBtn = document.getElementById('closeSecretBtn');
+  const confettiLayer = document.getElementById('confetti-layer');
+  if(!secretMsg || !closeBtn || !confettiLayer) return;
+
+  const sequence = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let pos = 0;
+  const colors = ['#FFC857','#FF6B6B','#4ECDC4','#F4F1FA'];
+
+  function burstConfetti(){
+    for(let i=0;i<40;i++){
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      const size = 6 + Math.random()*6;
+      el.style.width = size+'px';
+      el.style.height = size*0.4+'px';
+      el.style.left = (window.innerWidth/2 + (Math.random()-0.5)*200) + 'px';
+      el.style.top = '40%';
+      el.style.background = colors[Math.floor(Math.random()*colors.length)];
+      confettiLayer.appendChild(el);
+      const dx = (Math.random()-0.5)*500;
+      const dy = 300 + Math.random()*280;
+      const rot = Math.random()*720 - 360;
+      el.animate([
+        { transform:'translate(0,0) rotate(0deg)', opacity:1 },
+        { transform:`translate(${dx}px, ${dy}px) rotate(${rot}deg)`, opacity:0 }
+      ], { duration: 1000 + Math.random()*500, easing:'cubic-bezier(.2,.7,.4,1)' }).onfinish = () => el.remove();
+    }
+  }
+
+  window.addEventListener('keydown', (e) => {
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if(key === sequence[pos]){
+      pos++;
+      if(pos === sequence.length){
+        pos = 0;
+        burstConfetti();
+        secretMsg.classList.add('show');
+      }
+    } else {
+      pos = (key === sequence[0]) ? 1 : 0;
+    }
+  });
+
+  closeBtn.addEventListener('click', () => secretMsg.classList.remove('show'));
+
+  // mobile-friendly alternative: tap logo 5x
+  const logo = document.querySelector('.logo');
+  if(logo){
+    let tapCount = 0, tapTimer = null;
+    logo.addEventListener('click', () => {
+      tapCount++;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => { tapCount = 0; }, 1200);
+      if(tapCount >= 5){
+        tapCount = 0;
+        burstConfetti();
+        secretMsg.classList.add('show');
+      }
+    });
+  }
+})();
+
+// ===== double-tap heart burst (mobile gesture) =====
+(function(){
+  const hero = document.querySelector('.hero');
+  if(!hero) return;
+  let lastTap = 0;
+
+  function spawnHeart(x, y){
+    const el = document.createElement('div');
+    el.className = 'heart-burst';
+    el.textContent = '❤️';
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 700);
+  }
+
+  hero.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if(now - lastTap < 300){
+      const touch = e.changedTouches[0];
+      spawnHeart(touch.clientX, touch.clientY);
+      if(navigator.vibrate) navigator.vibrate(30);
+    }
+    lastTap = now;
+  });
+
+  // desktop fallback: double-click
+  hero.addEventListener('dblclick', (e) => {
+    spawnHeart(e.clientX, e.clientY);
+  });
+})();
+
+// ===== shake to shuffle mood (mobile DeviceMotion) =====
+(function(){
+  const btn = document.getElementById('shakeToggle');
+  const moodEl = document.getElementById('moodBadge');
+  const toast = document.getElementById('shakeToast');
+  if(!btn || !moodEl || !toast) return;
+
+  const moods = [
+    '🟢 Status: Tengah ngoding',
+    '🟡 Status: Debug mode ON',
+    '☕ Status: Perlukan kopi',
+    '🔵 Status: Rehat sekejap',
+    '🟠 Status: Fixing bug orang lain',
+    '🚀 Status: Deploy Friday (yolo)',
+    '🐛 Status: 99 bugs, fixed 1'
+  ];
+
+  let enabled = false, lastShake = 0, lastX=null,lastY=null,lastZ=null;
+
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1800);
+  }
+
+  function shuffleMood(){
+    moodEl.textContent = moods[Math.floor(Math.random() * moods.length)];
+    if(navigator.vibrate) navigator.vibrate(50);
+    showToast('📳 Goncang detected — mood shuffled!');
+  }
+
+  function handleMotion(e){
+    const acc = e.accelerationIncludingGravity;
+    if(!acc) return;
+    const {x, y, z} = acc;
+    if(lastX !== null){
+      const delta = Math.abs(x - lastX) + Math.abs(y - lastY) + Math.abs(z - lastZ);
+      const now = Date.now();
+      if(delta > 28 && now - lastShake > 1200){
+        lastShake = now;
+        shuffleMood();
+      }
+    }
+    lastX = x; lastY = y; lastZ = z;
+  }
+
+  function enableShake(){
+    window.addEventListener('devicemotion', handleMotion);
+    enabled = true;
+    btn.classList.add('active');
+    showToast('📳 Shake mode ON — goncang phone!');
+  }
+  function disableShake(){
+    window.removeEventListener('devicemotion', handleMotion);
+    enabled = false;
+    btn.classList.remove('active');
+  }
+
+  btn.addEventListener('click', async () => {
+    if(enabled){ disableShake(); return; }
+    if(typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function'){
+      try{
+        const res = await DeviceMotionEvent.requestPermission();
+        if(res === 'granted'){ enableShake(); } else { showToast('Akses motion sensor ditolak.'); }
+      }catch(err){ showToast('Tak dapat akses motion sensor.'); }
+    } else if('DeviceMotionEvent' in window){
+      enableShake();
+    } else {
+      showToast('Device ni tak support motion sensor.');
+    }
+  });
+
+  // hide button entirely on devices with no motion API at all (desktop)
+  if(!('DeviceMotionEvent' in window)){
+    btn.style.display = 'none';
+  }
+})();
+
+// ===== parallax blobs: gyroscope (mobile) + mouse (desktop) =====
+(function(){
+  const blobs = document.querySelectorAll('.parallax-blob');
+  if(!blobs.length) return;
+
+  function applyOffset(dx, dy){
+    blobs.forEach(b => {
+      const depth = parseFloat(b.dataset.depth) || 20;
+      b.style.transform = `translate(${dx*depth}px, ${dy*depth}px)`;
+    });
+  }
+
+  // desktop: mouse-based parallax
+  window.addEventListener('mousemove', (e) => {
+    const dx = (e.clientX / window.innerWidth) - 0.5;
+    const dy = (e.clientY / window.innerHeight) - 0.5;
+    applyOffset(dx, dy);
+  });
+
+  // mobile: gyroscope-based parallax (auto-starts, no permission needed on most Android;
+  // iOS will only get this after the shake-toggle button already granted motion permission)
+  window.addEventListener('deviceorientation', (e) => {
+    if(e.beta === null || e.gamma === null) return;
+    const dx = Math.max(-1, Math.min(1, e.gamma / 45));   // left-right tilt
+    const dy = Math.max(-1, Math.min(1, (e.beta - 45) / 45)); // front-back tilt
+    applyOffset(dx, dy);
+  });
+})();
+
+// ===== end-of-page celebration =====
+(function(){
+  const contactSection = document.getElementById('contact');
+  const toast = document.getElementById('celebrateToast');
+  if(!contactSection || !toast) return;
+  let fired = false;
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting && !fired){
+        fired = true;
+        toast.classList.add('show');
+        if(navigator.vibrate) navigator.vibrate([30, 40, 30]);
+        setTimeout(() => toast.classList.remove('show'), 3200);
+        io.disconnect();
+      }
+    });
+  }, { threshold: 0.6 });
+  io.observe(contactSection);
+})();
+
+// ===== console.log ASCII art easter egg =====
+(function(){
+  const art = `
+  ____              _      _
+ |  _ \\  __ _ _ __ (_) ___| |
+ | | | |/ _\` | '_ \\| |/ _ \\ |
+ | |_| | (_| | | | | |  __/ |
+ |____/ \\__,_|_| |_|_|\\___|_|
+  `;
+  console.log('%c' + art, 'color:#FFC857; font-family:monospace; font-size:12px;');
+  console.log('%cEh, korang bukak console jugak? Sesama developer memang gini. 😄', 'color:#4ECDC4; font-size:13px;');
+  console.log('%cNak sembang teknikal? Contact: danielaqasha55@gmail.com', 'color:#FF6B6B; font-size:12px;');
+})();
+
+// ===== tab title change on blur =====
+(function(){
+  const originalTitle = document.title;
+  const awayMessages = ['Jangan pergi dulu... 👀', 'Balik la sini 🥺', 'Portfolio ni sunyi tanpa korang'];
+  let msgIndex = 0;
+  window.addEventListener('blur', () => {
+    document.title = awayMessages[msgIndex % awayMessages.length];
+    msgIndex++;
+  });
+  window.addEventListener('focus', () => {
+    document.title = originalTitle;
+  });
+})();
+
+// ===== roaming bug mascot (squashable) =====
+(function(){
+  const counterEl = document.getElementById('bugCounter');
+  const countText = document.getElementById('bugCount');
+  if(!counterEl || !countText) return;
+
+  let bugCount = 0;
+  try{
+    const saved = localStorage.getItem('bugsFixed');
+    if(saved) bugCount = parseInt(saved) || 0;
+  }catch(e){}
+  countText.textContent = bugCount;
+
+  function spawnBug(){
+    if(document.getElementById('bugMascot')) return; // one at a time
+    const bug = document.createElement('div');
+    bug.id = 'bugMascot';
+    bug.textContent = '🐛';
+    const margin = 60;
+    const x = margin + Math.random() * (window.innerWidth - margin*2);
+    const y = margin + Math.random() * (window.innerHeight - margin*2);
+    bug.style.left = x + 'px';
+    bug.style.top = y + 'px';
+    document.body.appendChild(bug);
+
+    const timeout = setTimeout(() => { bug.remove(); }, 6000); // wanders off if not squashed
+
+    bug.addEventListener('click', () => {
+      clearTimeout(timeout);
+      bugCount++;
+      countText.textContent = bugCount;
+      counterEl.classList.add('show');
+      try{ localStorage.setItem('bugsFixed', bugCount); }catch(e){}
+
+      const pop = document.createElement('div');
+      pop.className = 'squash-pop';
+      pop.textContent = 'Bug fixed! +1 🎉';
+      pop.style.left = (parseFloat(bug.style.left) - 20) + 'px';
+      pop.style.top = (parseFloat(bug.style.top) - 10) + 'px';
+      document.body.appendChild(pop);
+      setTimeout(() => pop.remove(), 800);
+
+      if(navigator.vibrate) navigator.vibrate(20);
+      bug.remove();
+    });
+  }
+
+  if(bugCount > 0) counterEl.classList.add('show');
+
+  // spawn a bug randomly every 15-30s
+  function scheduleNext(){
+    const delay = 15000 + Math.random() * 15000;
+    setTimeout(() => { spawnBug(); scheduleNext(); }, delay);
+  }
+  scheduleNext();
+})();
+
+// ===== hidden terminal (press "/") =====
+(function(){
+  const overlay = document.getElementById('terminalOverlay');
+  const body = document.getElementById('terminalBody');
+  const input = document.getElementById('terminalInput');
+  if(!overlay || !body || !input) return;
+
+  function print(text, isCmd){
+    const line = document.createElement('div');
+    line.className = 't-line' + (isCmd ? ' t-cmd' : '');
+    line.textContent = text;
+    body.appendChild(line);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  const commands = {
+    help: () => 'Command tersedia: whoami, skills, projects, coffee, sudo hire me, clear, exit',
+    whoami: () => 'Daniel — Diploma CS student, UiTM Perlis. Practical training @ PKPP.',
+    skills: () => 'PHP, Laravel, MySQL, SQLite, Bootstrap 5, jQuery, Select2, Chart.js, Git',
+    projects: () => 'Sistem Bantuan Teknikal, HR Complaints System, AI Triage Agent — scroll naik untuk details.',
+    coffee: () => '☕ Kopi level: cukup. Sistem masih berjalan lancar.',
+    'sudo hire me': () => 'Permission granted. Email danielaqasha55@gmail.com untuk proceed. 😄',
+    clear: () => { body.innerHTML = ''; return null; },
+    exit: () => { closeTerminal(); return null; }
+  };
+
+  function runCommand(raw){
+    const cmd = raw.trim().toLowerCase();
+    if(!cmd) return;
+    print('> ' + raw, true);
+    if(commands[cmd]){
+      const result = commands[cmd]();
+      if(result) print(result);
+    } else {
+      print(`Command tak dijumpai: "${raw}". Taip "help" untuk senarai command.`);
+    }
+  }
+
+  function openTerminal(){
+    overlay.classList.add('show');
+    setTimeout(() => input.focus(), 50);
+  }
+  function closeTerminal(){
+    overlay.classList.remove('show');
+    input.value = '';
+  }
+
+  window.addEventListener('keydown', (e) => {
+    const tag = (document.activeElement && document.activeElement.tagName) || '';
+    if(e.key === '/' && tag !== 'INPUT' && tag !== 'TEXTAREA'){
+      e.preventDefault();
+      openTerminal();
+    } else if(e.key === 'Escape' && overlay.classList.contains('show')){
+      closeTerminal();
+    }
+  });
+
+  overlay.addEventListener('click', (e) => {
+    if(e.target === overlay) closeTerminal();
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter'){
+      runCommand(input.value);
+      input.value = '';
+    }
+  });
 })();
 </script>
 </body>
