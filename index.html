@@ -592,9 +592,9 @@
   <button id="closeSecretBtn">Ok baik</button>
 </div>
 
-<audio id="bgMusic" loop preload="none">
-  <source src="bg-music.mp3" type="audio/mpeg">
-</audio>
+<div id="ytPlayerContainer" style="position:fixed; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none;">
+  <div id="ytPlayer"></div>
+</div>
 
 <div id="bugCounter">🐛 Bugs fixed: <span id="bugCount">0</span></div>
 
@@ -621,7 +621,7 @@
   const btn = document.getElementById('greetBtn');
   if(!btn) return;
 
-  const GREETING = "Lam Suar Den Ni Haaa, Lagu ni kalu boleh toksey tengok hok masa lalu, doh guano hiduk gelak even aku bukok lapu. aku toksey toksey toksey, mitok jangey pakso aku aduh koksey koksey koksey mari balik koto baru aku toksey doh, maso lalu punoh ranoh mato layu buleh pekdoh ingak baik buak saloh tanoh air, air mato mato air jadi gilo cinto buto mu tok napok.                                                                      Ohoiii oi, lamo tok turun ke basa, raso nok segar angin, samekom, Sekok sebok miye risa, Samekomm, buleh hajak doh maley ni!";
+  const GREETING = "Anjayy, jom la usha-usha website den ni! Nok tanyo apo-apo pasal projek, contact je den kat email atau GitHub tu. Lamo tak jumpo pun takpo, hajak la sokmo!";
 
   function pickFemaleVoice(){
     const voices = window.speechSynthesis.getVoices();
@@ -784,32 +784,75 @@
   }
 })();
 
+// ===== background music (YouTube embed, persists across page navigation via localStorage) =====
 (function(){
+  const VIDEO_ID = 'Gg7KSOZ2ihc';
   const btn = document.getElementById('musicToggle');
-  const audio = document.getElementById('bgMusic');
-  if(!btn || !audio) return;
-  let playing = false;
+  let ytPlayer = null, playerReady = false, saveInterval = null;
 
-  audio.addEventListener('error', () => {
-    btn.style.opacity = '0.35';
-    btn.title = 'Fail muzik belum ada (bg-music.mp3)';
-  });
-
-  btn.addEventListener('click', () => {
-    if(!playing){
-      audio.volume = 0.35;
-      audio.play().then(() => {
-        playing = true;
-        btn.classList.add('active');
-      }).catch(() => {
-        btn.title = 'Fail muzik belum ada (bg-music.mp3)';
-      });
-    } else {
-      audio.pause();
-      playing = false;
-      btn.classList.remove('active');
+  function savePlayState(playing){
+    try{ localStorage.setItem('musicPlaying', playing ? '1' : '0'); }catch(e){}
+  }
+  function saveTime(){
+    if(ytPlayer && ytPlayer.getCurrentTime){
+      try{ localStorage.setItem('musicTime', ytPlayer.getCurrentTime()); }catch(e){}
     }
-  });
+  }
+
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+
+  window.onYouTubeIframeAPIReady = function(){
+    ytPlayer = new YT.Player('ytPlayer', {
+      height: '1', width: '1', videoId: VIDEO_ID,
+      playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: VIDEO_ID },
+      events: {
+        onReady: () => {
+          playerReady = true;
+          ytPlayer.setVolume(35);
+          let wasPlaying = '0';
+          try{ wasPlaying = localStorage.getItem('musicPlaying') || '0'; }catch(e){}
+          if(wasPlaying === '1'){
+            let t = 0;
+            try{ t = parseFloat(localStorage.getItem('musicTime')) || 0; }catch(e){}
+            ytPlayer.seekTo(t, true);
+            ytPlayer.playVideo();
+          }
+        },
+        onStateChange: (e) => {
+          if(e.data === YT.PlayerState.PLAYING){
+            savePlayState(true);
+            if(btn) btn.classList.add('active');
+            if(saveInterval) clearInterval(saveInterval);
+            saveInterval = setInterval(saveTime, 2000);
+          } else if(e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED){
+            savePlayState(false);
+            saveTime();
+            if(btn) btn.classList.remove('active');
+            if(saveInterval) clearInterval(saveInterval);
+          }
+        },
+        onError: () => {
+          if(btn){ btn.style.opacity = '0.35'; btn.title = 'Lagu tak dapat dimainkan'; }
+        }
+      }
+    });
+  };
+
+  window.addEventListener('beforeunload', saveTime);
+
+  if(btn){
+    btn.addEventListener('click', () => {
+      if(!playerReady) return;
+      const state = ytPlayer.getPlayerState();
+      if(state === YT.PlayerState.PLAYING){
+        ytPlayer.pauseVideo();
+      } else {
+        ytPlayer.playVideo();
+      }
+    });
+  }
 })();
 
 (function(){
